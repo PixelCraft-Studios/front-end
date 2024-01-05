@@ -1,0 +1,18 @@
+.toolbar-text {
+    font-family: Pacifico;
+}
+
+.title {
+    color: rgba(0, 0, 0, 0.70);
+    font-family: Pacifico;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    text-align: justify;
+   
+}
+
+.spacer {
+    flex: 1 1 auto;
+}

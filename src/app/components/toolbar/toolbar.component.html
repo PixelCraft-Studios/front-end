@@ -1,0 +1,48 @@
+@if(currentScreenSize !== 'XSmall' && currentScreenSize !== 'Small') {
+    <mat-toolbar color="white">
+        <button (click)="onDrawerToggleClick()" mat-icon-button aria-label="Menu icon button">
+            <mat-icon>waves</mat-icon>
+            </button>
+        <p class="title">{{toolbarLongSentence}} </p>
+       
+        <span class="spacer"></span>
+
+        @if(isSessionOn) {
+            <button class="title" mat-fab extended color="warn">
+                <mat-icon  color="primary" >save</mat-icon>
+                Save
+            </button>
+        }
+        <button class="title" mat-fab extended color="accent">
+            <mat-icon  color="primary" >explore</mat-icon>
+            Load
+        </button>
+        <button [routerLink]="'/search'" mat-icon-button aria-label="Search icon button">
+            <mat-icon>search</mat-icon>
+        </button>
+    </mat-toolbar>
+
+}
+
+@if(currentScreenSize === 'XSmall' || currentScreenSize === 'Small') {
+    <div style="display: flex; flex-direction: column; background-color: white; padding-bottom: 2%;">
+        <mat-toolbar-row style="padding: 2%; display: flex;">
+            <button  (click)="onDrawerToggleClick()" mat-icon-button aria-label="Menu icon button">
+                <mat-icon>waves</mat-icon>
+              </button>
+            <div class="title">{{toolbarShortSentence}} </div>
+            <span class="spacer"></span>
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+            <button class="title" mat-fab extended color="accent">
+                <mat-icon  color="primary" >explore</mat-icon>
+                Load an old game
+            </button>
+            <button [routerLink]="'/search'" mat-icon-button aria-label="Search icon button">
+                <mat-icon>search</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </div>
+
+
+}

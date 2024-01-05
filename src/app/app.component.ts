@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { ChildrenOutletContexts, RouterOutlet } from '@angular/router';
+import { DatabaseService } from './services/database.service';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,37 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = '7cs-loosecannon';
+
+  constructor(
+    private contexts: ChildrenOutletContexts, 
+    private databaseService: DatabaseService,    
+  ) {}
+
+  ngOnInit() {
+    // open database
+    this.databaseService.openDatabase('sessionDatabase', 1)
+      .then(() => {
+        console.log('Database opened successfully');
+
+        // Fetch the last session
+        // this.databaseService.getLastSession().then((lastSession: Session | null) => {
+        //   if (lastSession) {
+        //     console.log('Last session retrieved:', lastSession);
+        //     // Do something with the last session, e.g., update your UI
+        //   } else {
+        //     console.log('No previous session found.');
+        //   }
+        // });
+
+        // this.databaseService.clearDatabase()
+
+      })
+      .catch(() => {
+        console.error('Error opening database');
+      });
+    
+  }
+  getRouteAnimationData() {
+    return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'];
+  }
 }
