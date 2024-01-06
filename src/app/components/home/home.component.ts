@@ -16,6 +16,7 @@ import { ScreenSizeService } from '../../services/screen-size.service';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 import { SessionService } from '../../services/session.service';
+import { CannonComponent } from '../cannon/cannon.component';
 
 
 
@@ -25,7 +26,7 @@ import { SessionService } from '../../services/session.service';
   imports: [
     CommonModule, RouterModule, FormsModule, ReactiveFormsModule,
     MatSidenavModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule,
-    ToolbarComponent, 
+    ToolbarComponent, CannonComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'

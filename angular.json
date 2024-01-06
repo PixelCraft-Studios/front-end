@@ -23,7 +23,9 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/assets/fonts"
+              "src/assets/fonts",
+              "src/assets/libs",
+              "src/assets/textures/grid.png"
 
             ],
             "styles": [

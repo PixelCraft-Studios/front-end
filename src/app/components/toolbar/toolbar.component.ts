@@ -18,8 +18,8 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./toolbar.component.css']
 })
 export class ToolbarComponent implements OnDestroy {
-  toolbarLongSentence = "Seven seas ~ Confidence - Skybox!"
-  toolbarShortSentence = "Seven seas: skybox!"
+  toolbarLongSentence = "Seven seas ~ Calmness - Loose Cannon!"
+  toolbarShortSentence = "Seven seas: cannon!"
 
   currentScreenSize: string = '';
   private destroyed = new Subject<void>();

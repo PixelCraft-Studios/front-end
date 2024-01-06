@@ -1,0 +1,1 @@
+declare module 'src/assets/libs/ammo.js';
