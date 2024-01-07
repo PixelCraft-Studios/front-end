@@ -34,7 +34,6 @@ export class CannonComponent {
   private ballMaterial: THREE.MeshPhongMaterial = new THREE.MeshPhongMaterial( { color: 0x202020 });
 
   // PHYSICS
-
   private gravityConstant = 7.8;
   private collisionConfiguration!: any;
   private dispatcher!: any;
@@ -65,7 +64,6 @@ export class CannonComponent {
   }
 
   private numberOfObjectsToRemove = 0;
-
   private impactPoint: THREE.Vector3 = new THREE.Vector3();
   private impactNormal: THREE.Vector3 = new THREE.Vector3();
 
@@ -77,7 +75,6 @@ export class CannonComponent {
     this.loadFont();
     
   }
-
 
   private loadFont() {
     const loader = new FontLoader();
