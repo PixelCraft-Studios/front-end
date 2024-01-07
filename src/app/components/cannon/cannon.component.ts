@@ -1,6 +1,8 @@
 import { Component, ElementRef, inject } from '@angular/core';
 import * as THREE from 'three';
 import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import Ammo from 'src/assets/libs/ammo.js';
 import { ConvexObjectBreaker }  from 'three/examples/jsm/misc/ConvexObjectBreaker.js';
@@ -71,9 +73,23 @@ export class CannonComponent {
     this.initializeObjectsToRemove();
   }
 
+  ngOnInit() {
+    this.loadFont();
+    
+  }
 
 
-  
+  private loadFont() {
+    const loader = new FontLoader();
+    loader.load('assets/fonts/Pacifico_Regular.json', (loadedFont) => {
+      if (loadedFont) {
+        this.font = loadedFont;
+        console.log('font loaded!');
+        this.create3dText();
+      }
+    });
+  }
+
   ngAfterViewInit() {
   
     Ammo().then(  ( AmmoLib: typeof Ammo ) => {
@@ -92,6 +108,7 @@ export class CannonComponent {
     this.initPhysics();
     this.createGround();
     this.createBoxes();
+    // this.create3dText();
     this.initInput();
 
   }
@@ -183,6 +200,34 @@ export class CannonComponent {
       ballBody.setLinearVelocity( new this.Ammo.btVector3( this.pos.x, this.pos.y, this.pos.z ) );
 
     } );
+  }
+
+
+///  CREATE FUNCTIONS
+
+  private create3dText() {
+    this.pos.set(0, 10, 10);
+    this.quat.set(0, 0, 0, 1);
+    this.create3dTextObject('Keyword', 0.02, this.pos, this.quat, this.createMaterial(0xffffff));
+  }
+
+  private create3dTextObject(text: string, mass: number, pos: THREE.Vector3, quat: THREE.Quaternion, material: THREE.Material) {
+    const textGeometry = new TextGeometry(text, {
+      font: this.font,
+      size: 1, // Adjust the size as needed
+      height: .5, // Adjust the height as needed
+      curveSegments: 3,
+      bevelEnabled: false,
+    });
+
+
+    const textMesh = new THREE.Mesh(textGeometry, material);
+
+    textMesh.position.copy(pos);
+    textMesh.quaternion.copy(quat);
+
+    this.convexObjectBreaker.prepareBreakableObject(textMesh, mass, new THREE.Vector3(), new THREE.Vector3(), true);
+    this.createDebrisFromBreakableObject(textMesh);
   }
 
   private createBoxes() {
