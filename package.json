@@ -20,7 +20,6 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
-    "ammojs-typed": "^1.0.6",
     "rxjs": "~7.8.0",
     "three": "^0.160.0",
     "tslib": "^2.3.0",
@@ -40,5 +39,10 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.2.2"
+  },
+  "browser" : {
+    "fs": false,
+    "os": false,
+    "path": false
   }
 }
