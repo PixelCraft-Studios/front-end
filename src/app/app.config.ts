@@ -4,6 +4,7 @@ import { RouterStateSnapshot, TitleStrategy, provideRouter } from '@angular/rout
 import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { Title } from '@angular/platform-browser';
+import { provideHttpClient } from '@angular/common/http';
 
 
 @Injectable({providedIn: 'root'})
@@ -24,6 +25,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes), 
     provideAnimations(),
     {provide: TitleStrategy, useClass: TemplatePageTitleStrategy},
+    provideHttpClient(),
   ]
 };
 

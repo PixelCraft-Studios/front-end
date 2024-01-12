@@ -6,6 +6,7 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import Ammo from 'src/assets/libs/ammo.js';
 import { ConvexObjectBreaker }  from 'three/examples/jsm/misc/ConvexObjectBreaker.js';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-cannon',
@@ -67,11 +68,35 @@ export class CannonComponent {
   private impactPoint: THREE.Vector3 = new THREE.Vector3();
   private impactNormal: THREE.Vector3 = new THREE.Vector3();
 
-  constructor() {
+  private questionData: any = []
+  private questionMaterials: THREE.Material[] = [];
+  private questionWord: string = "";
+
+  constructor(private http: HttpClient) {
     this.initializeObjectsToRemove();
+
+    const numberOfQuestions = 3;
+    const mediaPath = ' https://sevenseas-nest-5a6h3crcgq-rj.a.run.app/media/'
+
+    this.http.get(' https://sevenseas-nest-5a6h3crcgq-rj.a.run.app/database/some/' + numberOfQuestions).subscribe(
+      (data) => {
+        this.questionData = data;
+        console.log(data);
+        // extract the right word
+        this.questionWord = this.questionData[0].word;
+
+        for(let i = 0; i < numberOfQuestions; i++) {
+          const imagePath = mediaPath + this.questionData[i].image;
+          const textureMaterial = this.createMaterialFromTexture(imagePath);
+          this.questionMaterials.push(textureMaterial);
+        }
+        
+      }
+    );
   }
 
   ngOnInit() {
+
     this.loadFont();
     
   }
@@ -82,22 +107,21 @@ export class CannonComponent {
       if (loadedFont) {
         this.font = loadedFont;
         console.log('font loaded!');
-        this.create3dText();
+        // this.create3dText();
+        // this.createBoxes();
+        Ammo().then(  ( AmmoLib: typeof Ammo ) => {
+
+          this.Ammo = AmmoLib;
+            console.log('loaded ammo!')
+            this.init();
+            this.animate();
+    
+        } );
       }
     });
   }
 
-  ngAfterViewInit() {
-  
-    Ammo().then(  ( AmmoLib: typeof Ammo ) => {
 
-			this.Ammo = AmmoLib;
-        console.log('loaded ammo!')
-        this.init();
-        this.animate();
-
-		} );
-  }
 
   init() {
 
@@ -105,7 +129,7 @@ export class CannonComponent {
     this.initPhysics();
     this.createGround();
     this.createBoxes();
-    // this.create3dText();
+    this.create3dText();
     this.initInput();
 
   }
@@ -205,7 +229,7 @@ export class CannonComponent {
   private create3dText() {
     this.pos.set(0, 10, 10);
     this.quat.set(0, 0, 0, 1);
-    this.create3dTextObject('Keyword', 0.02, this.pos, this.quat, this.createMaterial(0xffffff));
+    this.create3dTextObject(this.questionWord, 0.02, this.pos, this.quat, this.createMaterial(0xffffff));
   }
 
   private create3dTextObject(text: string, mass: number, pos: THREE.Vector3, quat: THREE.Quaternion, material: THREE.Material) {
@@ -236,7 +260,7 @@ export class CannonComponent {
       const spacing = 20; // Adjust this value for the desired spacing
       const m = i + 1;
       this.pos.set((-10 * m) + (spacing * i), 10, 1 * m);
-      this.createBoxObject(boxMass, boxHalfExtents, this.pos, this.quat, this.createMaterial(0xB03014));
+      this.createBoxObject(boxMass, boxHalfExtents, this.pos, this.quat, this.questionMaterials[i]);
     }
   }
 
@@ -245,6 +269,14 @@ export class CannonComponent {
     color = color || this.createRandomColor();
     return new THREE.MeshPhongMaterial( { color: color } );
 
+  }
+
+  private createMaterialFromTexture(texturePath: string): THREE.Material {
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load(texturePath);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    return new THREE.MeshPhongMaterial({map: texture,})
   }
 
   private createRandomColor() {
@@ -262,12 +294,17 @@ export class CannonComponent {
     this.createDebrisFromBreakableObject(boxObject);
   }
 
-  private createDebrisFromBreakableObject(object: THREE.Mesh) {
+  private createDebrisFromBreakableObject(object: THREE.Mesh, isFragment: boolean = false) {
     object.castShadow = true;
     object.receiveShadow = true;
 
     const shape = this.createConvexHullPhysicsShape(object.geometry.attributes['position'].array)
     shape.setMargin(this.margin);
+    if(isFragment) {
+      console.log('fragment!!');
+      object.material = this.createMaterial(this.createRandomColor());
+
+    }
 
     const body = this.createRigidBody(
       object, shape, object.userData['mass'], 
@@ -523,7 +560,7 @@ export class CannonComponent {
           fragment.userData['velocity'].set( vel.x(), vel.y(), vel.z() );
           fragment.userData['angularVelocity'].set( angVel.x(), angVel.y(), angVel.z() );
 
-          this.createDebrisFromBreakableObject(fragment as THREE.Mesh );
+          this.createDebrisFromBreakableObject(fragment as THREE.Mesh, true );
 
         }
 
@@ -543,7 +580,7 @@ export class CannonComponent {
             fragment.userData['velocity'].set( vel.x(), vel.y(), vel.z() );
             fragment.userData['angularVelocity'].set( angVel.x(), angVel.y(), angVel.z() );
 
-            this.createDebrisFromBreakableObject( fragment as THREE.Mesh );
+            this.createDebrisFromBreakableObject( fragment as THREE.Mesh, true );
 
           }
 

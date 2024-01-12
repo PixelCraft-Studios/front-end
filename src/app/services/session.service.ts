@@ -5,7 +5,6 @@ import { Session } from '../models/session.model';
   providedIn: 'root'
 })
 export class SessionService {
-
   private emptySession: Session = {
     createdDate: new Date(),
     lastAccessDate: new Date(),

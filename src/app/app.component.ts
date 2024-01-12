@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ChildrenOutletContexts, RouterOutlet } from '@angular/router';
 import { DatabaseService } from './services/database.service';
 import { slideFromTopAnimation } from './animations';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -19,15 +20,13 @@ export class AppComponent {
 
   constructor(
     private contexts: ChildrenOutletContexts, 
-    private databaseService: DatabaseService,    
+    private databaseService: DatabaseService,
   ) {}
-
   ngOnInit() {
-    // open database
+    // open local database
     this.databaseService.openDatabase('sessionDatabase', 1)
       .then(() => {
         console.log('Database opened successfully');
-
         // Fetch the last session
         // this.databaseService.getLastSession().then((lastSession: Session | null) => {
         //   if (lastSession) {
